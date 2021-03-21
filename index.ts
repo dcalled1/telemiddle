@@ -1,8 +1,13 @@
 import express, {Application} from "express";
 import * as http from "http"
+import * as dotenv from "dotenv"
 
 import CommonRoutesConfig from "./config/routes/Common"
 import UsersRoutes from "./config/routes/User";
+
+dotenv.config();
+
+import "./config/database";
 
 
 const app: Application = express();
