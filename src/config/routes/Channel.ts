@@ -1,6 +1,9 @@
 import CommonRoutesConfig from './Common';
 import {Application, Request, Response, NextFunction} from 'express';
 
+//Schemas
+import Channel from '../../schemas/Channel';
+
 export default class ChannelsRoutes extends CommonRoutesConfig {
     constructor(app: Application) {
         super(app, 'ChannelsRoutes');
@@ -9,10 +12,10 @@ export default class ChannelsRoutes extends CommonRoutesConfig {
     configureRoutes() {
         this.app.route(`/channels`)
         .get((req: Request, res: Response) => {
-            res.status(200).send(`List of users`);
+            res.status(200).send(`List of channels`);
         })
         .post((req: Request, res: Response) => {
-            res.status(200).send(`Post to users`);
+            res.status(200).send(`list of channels`);
         });
 
         this.app.route(`/channels/newchannel/:channelid`)
@@ -21,6 +24,9 @@ export default class ChannelsRoutes extends CommonRoutesConfig {
             // but it doesn't accomplish anything just yet---
             // it simply passes control to the next applicable function below using next()
             next();
+        })
+        .get((req: Request, res: Response) => {
+            res.status(501).send(` Unimplemented new channel feature to process request for channel:${req.params.channelid}`);
         })
         .post((req: Request, res: Response) => {
             res.status(501).send(` Unimplemented new channel feature to process request for channel:${req.params.channelid}`);
@@ -33,6 +39,9 @@ export default class ChannelsRoutes extends CommonRoutesConfig {
             // it simply passes control to the next applicable function below using next()
             next();
         })
+        .get((req: Request, res: Response) => {
+            res.status(501).send(` Unimplemented get channel message feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
+        })
         .post((req: Request, res: Response) => {
             res.status(501).send(` Unimplemented get channel message feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
         });
@@ -43,6 +52,9 @@ export default class ChannelsRoutes extends CommonRoutesConfig {
             // but it doesn't accomplish anything just yet---
             // it simply passes control to the next applicable function below using next()
             next();
+        })
+        .get((req: Request, res: Response) => {
+            res.status(501).send(` Unimplemented new channel message feature to process request for channel:${req.params.channelid}`);
         })
         .post((req: Request, res: Response) => {
             res.status(501).send(` Unimplemented new channel message feature to process request for channel:${req.params.channelid}`);
