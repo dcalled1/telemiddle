@@ -3,6 +3,8 @@ import {Application, Request, Response, NextFunction} from 'express';
 
 //Schemas
 import Channel from '../../schemas/Channel';
+import ChannelMessage from '../../schemas/ChannelMessage';
+import WorkerQueue from '../../schemas/WorkerQueue'
 
 export default class ChannelsRoutes extends CommonRoutesConfig {
     constructor(app: Application) {

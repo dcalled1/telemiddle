@@ -3,7 +3,8 @@ import { Schema, model, Types} from 'mongoose';
 const ChannelSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     owner: {
         type: Types.ObjectId,

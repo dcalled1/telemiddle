@@ -1,16 +1,16 @@
 import { Schema, model, Types} from 'mongoose';
 
-const QueueSchema = new Schema({
+const ChannelMessageSchema = new Schema({
     name: {
         type: String,
         required: true,
         unique: true
     },
-    owner: {
+    queue: {
         type: Types.ObjectId,
-        ref: 'User',
+        ref: 'Channel',
         required: true
     }
 });
 
-export default model('Queue', QueueSchema);
+export default model('ChannelMessage', ChannelMessageSchema);

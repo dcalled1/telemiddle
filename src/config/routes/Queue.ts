@@ -3,6 +3,8 @@ import {Application, Request, Response, NextFunction} from 'express';
 
 //Schemas
 import Queue from '../../schemas/Queue';
+import QueueMessage from '../../schemas/QueueMessage';
+
 
 export default class QueuesRoutes extends CommonRoutesConfig {
     constructor(app: Application) {
