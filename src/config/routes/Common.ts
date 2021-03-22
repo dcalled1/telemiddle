@@ -1,4 +1,5 @@
 import {Application} from 'express';
+import BaseController from '../../controllers/Common';
 
 export default abstract class CommonRoutesConfig {
     app: Application;
