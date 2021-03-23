@@ -1,7 +1,7 @@
 import {Request, Response,} from 'express';
 
 import BaseController from "./Common";
-import User from "../schemas/User"
+import User, { UserDocument } from "../schemas/User"
 
 
 export default class UserController implements BaseController {
@@ -9,32 +9,43 @@ export default class UserController implements BaseController {
 
     }
 
-    index(req: Request, res: Response) {
-
+    async index(req: Request, res: Response) {
+        const users = await User.find({});
+        res.json(users);
     }
 
-    registerUser(req: Request, res: Response) {
-        res.json({username: req.body.username, email: req.body.email, userExists: req.body.userExists || "nothing"});
-    }
-
-    validateUser(req: Request, res: Response) {
-        console.log("validating user...");
-        User.exists({
+    async registerUser(req: Request, res: Response) {
+        const {userExists, usernameExists, emailExists} = req.body;
+        const userData = {
             username: req.body.username, 
             email: req.body.email
-        }, function (err, result) {
-            if(err) req.body.userExists = false;
-            else {
-                User.find({
-                    username: req.body.username, 
-                    email: req.body.email
-                }).then(users => {
-                    const user = users[0];
-                    req.body.userExists = true;
-                    req.body.user = user;
-                });
-            } 
-        });
+        };
+        if(userExists || usernameExists || emailExists) {
+            res.send(`User already exists (username and email must be different)`);
+        } else {
+            const newUser = new User(userData);
+            await newUser.save();
+            res.json({userData, status: "User created!"});
+        }
+    }
+
+    async validateUser(req: Request, res: Response) {
+        const userData = {
+            username: req.body.username, 
+            email: req.body.email
+        };
+        if(await User.exists(userData)) {
+            const user = await User.find(userData);
+            req.body.userExists = true;
+            req.body.userObject = user[0];
+        } else if(await User.exists({username: userData.username})) {
+            req.body.userExists = false;
+            req.body.usernameExists = true;
+        } else if (await User.exists({email: userData.email})) {
+            req.body.userExists = false;
+            req.body.emailExists = true;
+        } else req.body.userExists = false;
+        
     }
 
     registerKey(req: Request, res: Response) {
