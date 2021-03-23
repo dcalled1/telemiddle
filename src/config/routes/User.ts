@@ -17,8 +17,8 @@ export default class UsersRoutes extends CommonRoutesConfig {
             });
 
         this.app.route(`/users/new`)
-            .all((req: Request, res: Response, next: NextFunction) => {
-                this.controller.validateUser(req, res);
+            .all(async (req: Request, res: Response, next: NextFunction) => {
+                await this.controller.validateUser(req, res);
                 next();
             })
             .post((req: Request, res: Response) => {

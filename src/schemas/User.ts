@@ -11,7 +11,6 @@ const UserSchema = new Schema<UserDocument, UserModel>({
         type: String,
         unique: true,
         required: true,
-        lowercase: true,
     }
 });
 
