@@ -5,10 +5,17 @@ import {Application, Request, Response, NextFunction} from 'express';
 import Queue from '../../schemas/Queue';
 import QueueMessage from '../../schemas/QueueMessage';
 
+//Controller
+import QueueController from '../../controllers/QueueController';
+
 
 export default class QueuesRoutes extends CommonRoutesConfig {
+
+    controller: QueueController;
+
     constructor(app: Application) {
         super(app, 'QueuesRoutes');
+        this.controller = new QueueController();
     }
 
     configureRoutes() {
@@ -20,7 +27,7 @@ export default class QueuesRoutes extends CommonRoutesConfig {
             res.status(200).send(`List of queues`);
         });
 
-        this.app.route(`/queues/newqueue/:queueid`)
+        this.app.route(`/queues/newqueue/:queuename`)
         .all((req: Request, res: Response, next: NextFunction) => {
             // this middleware function runs before any request to /queues/:queueId/getmessage
             // but it doesn't accomplish anything just yet---
@@ -28,10 +35,24 @@ export default class QueuesRoutes extends CommonRoutesConfig {
             next();
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new queue feature to process request for queue:${req.params.queueid}`);
+            this.controller.newQueue(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new queue feature to process request for queue:${req.params.queueid}`);
+            this.controller.newQueue(req, res);
+        });
+
+        this.app.route(`/queues/deletequeue/:queueid`)
+        .all((req: Request, res: Response, next: NextFunction) => {
+            // this middleware function runs before any request to /queues/:queueId/getmessage
+            // but it doesn't accomplish anything just yet---
+            // it simply passes control to the next applicable function below using next()
+            next();
+        })
+        .get((req: Request, res: Response) => {
+            this.controller.deleteQueue(req, res);
+        })
+        .post((req: Request, res: Response) => {
+            this.controller.deleteQueue(req, res);
         });
 
         this.app.route(`/queues/:queueid/getmessage`)
@@ -42,10 +63,10 @@ export default class QueuesRoutes extends CommonRoutesConfig {
             next();
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented get queue message feature to process request for queue:${req.params.queueid}`);
+            this.controller.getMessage(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented get queue message feature to process request for queue:${req.params.queueid}`);
+            this.controller.getMessage(req, res);
         });
         
         this.app.route(`/queues/:queueid/newmessage`)
@@ -56,10 +77,10 @@ export default class QueuesRoutes extends CommonRoutesConfig {
             next();
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new queue message feature to process request for queue:${req.params.queueid}`);
+            this.controller.newMessage(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new queue message feature to process request for queue:${req.params.queueid}`);
+            this.controller.newMessage(req, res);
         });
 
         return this.app;

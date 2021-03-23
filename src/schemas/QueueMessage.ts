@@ -1,10 +1,9 @@
 import { Schema, model, Types} from 'mongoose';
 
 const QueueMessageSchema = new Schema({
-    name: {
+    message: {
         type: String,
         required: true,
-        unique: true
     },
     queue: {
         type: Types.ObjectId,

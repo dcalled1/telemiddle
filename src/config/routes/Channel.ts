@@ -20,7 +20,7 @@ export default class ChannelsRoutes extends CommonRoutesConfig {
             res.status(200).send(`list of channels`);
         });
 
-        this.app.route(`/channels/newchannel`)
+        this.app.route(`/channels/newchannel/:channelname`)
         .all((req: Request, res: Response, next: NextFunction) => {
             // this middleware function runs before any request to /queues/:queueId
             // but it doesn't accomplish anything just yet---
@@ -34,7 +34,21 @@ export default class ChannelsRoutes extends CommonRoutesConfig {
             res.status(501).send(` Unimplemented new channel feature to process request for channel:${req.params.channelid}`);
         });
 
-        this.app.route(`/channels/:channelid/newsubscription`)
+        this.app.route(`/channels/deletechannel/:channelname`)
+        .all((req: Request, res: Response, next: NextFunction) => {
+            // this middleware function runs before any request to /queues/:queueId
+            // but it doesn't accomplish anything just yet---
+            // it simply passes control to the next applicable function below using next()
+            next();
+        })
+        .get((req: Request, res: Response) => {
+            res.status(501).send(` Unimplemented delete channel feature to process request for channel:${req.params.channelid}`);
+        })
+        .post((req: Request, res: Response) => {
+            res.status(501).send(` Unimplemented delete channel feature to process request for channel:${req.params.channelid}`);
+        });
+
+        this.app.route(`/channels/:channelid/subscribe/:workername`)
         .all((req: Request, res: Response, next: NextFunction) => {
             // this middleware function runs before any request to /queues/:queueId
             // but it doesn't accomplish anything just yet---
@@ -46,6 +60,20 @@ export default class ChannelsRoutes extends CommonRoutesConfig {
         })
         .post((req: Request, res: Response) => {
             res.status(501).send(` Unimplemented new channel subscription feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
+        });
+
+        this.app.route(`/channels/:channelid/unsubscribe/:workername`)
+        .all((req: Request, res: Response, next: NextFunction) => {
+            // this middleware function runs before any request to /queues/:queueId
+            // but it doesn't accomplish anything just yet---
+            // it simply passes control to the next applicable function below using next()
+            next();
+        })
+        .get((req: Request, res: Response) => {
+            res.status(501).send(` Unimplemented unsubscribe channel feature to process request for channel:${req.params.channelid}`);
+        })
+        .post((req: Request, res: Response) => {
+            res.status(501).send(` Unimplemented unsubscribe channel feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
         });
 
         this.app.route(`/channels/:channelid/:workerid/getmessage`)

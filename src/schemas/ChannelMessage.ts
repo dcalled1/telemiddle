@@ -1,7 +1,7 @@
 import { Schema, model, Types} from 'mongoose';
 
 const ChannelMessageSchema = new Schema({
-    name: {
+    message: {
         type: String,
         required: true,
         unique: true
