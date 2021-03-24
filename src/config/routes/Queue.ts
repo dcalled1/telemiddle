@@ -7,79 +7,78 @@ import QueueMessage from '../../schemas/QueueMessage';
 
 //Controller
 import QueueController from '../../controllers/QueueController';
+import UserController from '../../controllers/UserController';
 
 
 export default class QueuesRoutes extends CommonRoutesConfig {
 
     controller: QueueController;
+    userController: UserController;
 
     constructor(app: Application) {
         super(app, 'QueuesRoutes');
         this.controller = new QueueController();
+        this.userController = new UserController();
     }
 
     configureRoutes() {
         this.app.route(`/queues`)
-        .get((req: Request, res: Response) => {
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            next();
+        })
+        .get(async (req: Request, res: Response) => {
             this.controller.index(req, res);
         })
-        .post((req: Request, res: Response) => {
+        .post(async (req: Request, res: Response) => {
         });
 
         this.app.route(`/queues/newqueue/:queuename`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId/getmessage
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
             next();
         })
-        .get((req: Request, res: Response) => {
-            this.controller.newQueue(req, res);
+        .get(async (req: Request, res: Response) => {
+            await this.controller.newQueue(req, res);
         })
-        .post((req: Request, res: Response) => {
-            this.controller.newQueue(req, res);
+        .post( async (req: Request, res: Response) => {
+            await this.controller.newQueue(req, res);
         });
 
         this.app.route(`/queues/deletequeue/:queuename`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId/getmessage
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
             next();
         })
-        .get((req: Request, res: Response) => {
-            this.controller.deleteQueue(req, res);
+        .get(async (req: Request, res: Response) => {
+            await this.controller.deleteQueue(req, res);
         })
-        .post((req: Request, res: Response) => {
-            this.controller.deleteQueue(req, res);
+        .post(async (req: Request, res: Response) => {
+            await this.controller.deleteQueue(req, res);
         });
 
         this.app.route(`/queues/:queuename/getmessage`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId/getmessage
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
             next();
         })
-        .get((req: Request, res: Response) => {
-            this.controller.getMessage(req, res);
+        .get(async (req: Request, res: Response) => {
+            await this.controller.getMessage(req, res);
         })
-        .post((req: Request, res: Response) => {
-            this.controller.getMessage(req, res);
+        .post(async (req: Request, res: Response) => {
+            await this.controller.getMessage(req, res);
         });
         
         this.app.route(`/queues/:queuename/newmessage`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId/newmessage
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
             next();
         })
-        .get((req: Request, res: Response) => {
-            this.controller.newMessage(req, res);
+        .get(async (req: Request, res: Response) => {
+            await this.controller.newMessage(req, res);
         })
-        .post((req: Request, res: Response) => {
-            this.controller.newMessage(req, res);
+        .post(async (req: Request, res: Response) => {
+            await this.controller.newMessage(req, res);
         });
 
         return this.app;
