@@ -113,7 +113,6 @@ export default class UserController implements BaseController {
             if(UUIDAPIKey.check(apiKey, key.uuid)) ok = true;
         });
         req.body.validKey = ok;
-        res.send(ok)
     }
 
 }
