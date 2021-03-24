@@ -21,10 +21,9 @@ export default class QueuesRoutes extends CommonRoutesConfig {
     configureRoutes() {
         this.app.route(`/queues`)
         .get((req: Request, res: Response) => {
-            res.status(200).send(`List of queues`);
+            this.controller.index(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(200).send(`List of queues`);
         });
 
         this.app.route(`/queues/newqueue/:queuename`)
@@ -41,7 +40,7 @@ export default class QueuesRoutes extends CommonRoutesConfig {
             this.controller.newQueue(req, res);
         });
 
-        this.app.route(`/queues/deletequeue/:queueid`)
+        this.app.route(`/queues/deletequeue/:queuename`)
         .all((req: Request, res: Response, next: NextFunction) => {
             // this middleware function runs before any request to /queues/:queueId/getmessage
             // but it doesn't accomplish anything just yet---
@@ -55,7 +54,7 @@ export default class QueuesRoutes extends CommonRoutesConfig {
             this.controller.deleteQueue(req, res);
         });
 
-        this.app.route(`/queues/:queueid/getmessage`)
+        this.app.route(`/queues/:queuename/getmessage`)
         .all((req: Request, res: Response, next: NextFunction) => {
             // this middleware function runs before any request to /queues/:queueId/getmessage
             // but it doesn't accomplish anything just yet---
@@ -69,7 +68,7 @@ export default class QueuesRoutes extends CommonRoutesConfig {
             this.controller.getMessage(req, res);
         });
         
-        this.app.route(`/queues/:queueid/newmessage`)
+        this.app.route(`/queues/:queuename/newmessage`)
         .all((req: Request, res: Response, next: NextFunction) => {
             // this middleware function runs before any request to /queues/:queueId/newmessage
             // but it doesn't accomplish anything just yet---
