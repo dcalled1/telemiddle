@@ -1,11 +1,12 @@
 import { Schema, Model, model, Types, Document} from 'mongoose';
 import './Channel';
 
-const WorkerQueueSchema = new Schema({
-// const WorkerQueueSchema = new Schema<WorkerQueueDocument, WorkerQueueModel>({
+// const WorkerQueueSchema = new Schema({
+const WorkerQueueSchema = new Schema<WorkerQueueDocument, WorkerQueueModel>({
     name: {
         type: String,
         required: true,
+        unique: true
     },
     channel: {
         type: Types.ObjectId,
@@ -14,32 +15,32 @@ const WorkerQueueSchema = new Schema({
     }
 });
 
-export default model('WorkerQueue', WorkerQueueSchema);
+// export default model('WorkerQueue', WorkerQueueSchema);
 
-// export interface WorkerQueue {
-//     name : String;
-//     channel: Types.ObjectId;
-// }
+export interface WorkerQueue {
+    name : String;
+    channel: Types.ObjectId;
+}
 
-// interface WorkerQueueBaseDocument extends WorkerQueue, Document {
-//     getName(): String;
-//     getChannel(): Types.ObjectId;
-// }
+interface WorkerQueueBaseDocument extends WorkerQueue, Document {
+    getName(): String;
+    getChannel(): Types.ObjectId;
+}
 
-// export interface WorkerQueueDocument extends WorkerQueueBaseDocument {
+export interface WorkerQueueDocument extends WorkerQueueBaseDocument {
 
-// }
+}
 
-// WorkerQueueSchema.methods.getName = function () {
-//     return this.name;
-// }
+WorkerQueueSchema.methods.getName = function () {
+    return this.name;
+}
 
-// WorkerQueueSchema.methods.getChannel = function () {
-//     return this.channel;
-// }
+WorkerQueueSchema.methods.getChannel = function () {
+    return this.channel;
+}
 
-// export interface WorkerQueueModel extends Model<WorkerQueueDocument> {
+export interface WorkerQueueModel extends Model<WorkerQueueDocument> {
     
-// }
+}
 
-// export default model<WorkerQueueDocument, WorkerQueueModel>('WorkerQueue', WorkerQueueSchema);
+export default model<WorkerQueueDocument, WorkerQueueModel>('WorkerQueue', WorkerQueueSchema);

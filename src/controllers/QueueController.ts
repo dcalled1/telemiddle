@@ -36,9 +36,11 @@ export default class QueueController implements BaseController {
         try{
             const user = await User.find({username: req.body.username}, null, {limit: 1});
             const queue = await Queue.find({name: req.params.queuename}, null, {limit: 1});
-            if (user[0]?._id == queue[0]?._id){
+            if (user[0]?.id === queue[0]?.getOwner().toHexString()){
                 await Queue.findByIdAndRemove(queue[0]?._id);
                 res.status(200).send('Queue deleted successfully.');
+            }else{
+                res.status(400).send('The server could not understand the request due to invalid syntax');
             }
         }catch (err){
             console.log(err);

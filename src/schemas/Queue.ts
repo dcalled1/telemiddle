@@ -6,12 +6,12 @@ const QueueSchema = new Schema<QueueDocument, QueueModel>({
     name: {
         type: String,
         required: true,
+        unique: true
     },
     owner: {
         type: Types.ObjectId,
         ref: 'User',
         required: true,
-        unique: true
     }
 });
 

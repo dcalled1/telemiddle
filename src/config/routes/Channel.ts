@@ -6,102 +6,111 @@ import Channel from '../../schemas/Channel';
 import ChannelMessage from '../../schemas/ChannelMessage';
 import WorkerQueue from '../../schemas/WorkerQueue'
 
+//Controllers
+import UserController from '../../controllers/UserController';
+import ChannelController from '../../controllers/ChannelController';
+
 export default class ChannelsRoutes extends CommonRoutesConfig {
+
+    controller: ChannelController;
+    userController: UserController;
+
     constructor(app: Application) {
         super(app, 'ChannelsRoutes');
+        this.controller = new ChannelController();
+        this.userController = new UserController();
     }
 
     configureRoutes() {
         this.app.route(`/channels`)
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
+        })
         .get((req: Request, res: Response) => {
-            res.status(200).send(`List of channels`);
+            this.controller.index(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(200).send(`list of channels`);
+            this.controller.index(req, res);
         });
 
         this.app.route(`/channels/newchannel/:channelname`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
-            next();
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new channel feature to process request for channel:${req.params.channelid}`);
+            this.controller.newChannel(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new channel feature to process request for channel:${req.params.channelid}`);
+            this.controller.newChannel(req, res);
         });
 
         this.app.route(`/channels/deletechannel/:channelname`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
-            next();
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented delete channel feature to process request for channel:${req.params.channelid}`);
+            this.controller.deleteChannel(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented delete channel feature to process request for channel:${req.params.channelid}`);
+            this.controller.deleteChannel(req, res);
         });
 
-        this.app.route(`/channels/:channelid/subscribe/:workername`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
-            next();
+        this.app.route(`/channels/:channelname/subscribe/:workername`)
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new channel subscription feature to process request for channel:${req.params.channelid}`);
+            this.controller.newWorker(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new channel subscription feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
+            this.controller.newWorker(req, res);
         });
 
-        this.app.route(`/channels/:channelid/unsubscribe/:workername`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
-            next();
+        this.app.route(`/channels/:channelname/unsubscribe/:workername`)
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented unsubscribe channel feature to process request for channel:${req.params.channelid}`);
+            this.controller.deleteWorker(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented unsubscribe channel feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
+            this.controller.deleteWorker(req, res);
         });
 
-        this.app.route(`/channels/:channelid/:workerid/getmessage`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
-            next();
+        this.app.route(`/channels/:channelname/:workername/getmessage`)
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented get channel message feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
+            this.controller.getMessage(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented get channel message feature to process request for channel:${req.params.channelid}, workerid:${req.params.workerid}`);
+            this.controller.getMessage(req, res);
         });
 
-        this.app.route(`/channels/:channelid/newmessage`)
-        .all((req: Request, res: Response, next: NextFunction) => {
-            // this middleware function runs before any request to /queues/:queueId
-            // but it doesn't accomplish anything just yet---
-            // it simply passes control to the next applicable function below using next()
-            next();
+        this.app.route(`/channels/:channelname/newmessage`)
+        .all(async (req: Request, res: Response, next: NextFunction) => {
+            await this.userController.validateKey(req, res);
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new channel message feature to process request for channel:${req.params.channelid}`);
+            this.controller.newMessage(req, res);
         })
         .post((req: Request, res: Response) => {
-            res.status(501).send(` Unimplemented new channel message feature to process request for channel:${req.params.channelid}`);
+            this.controller.newMessage(req, res);
         });
         
         return this.app;
