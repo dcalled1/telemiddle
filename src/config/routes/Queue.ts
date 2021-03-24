@@ -25,18 +25,21 @@ export default class QueuesRoutes extends CommonRoutesConfig {
         this.app.route(`/queues`)
         .all(async (req: Request, res: Response, next: NextFunction) => {
             await this.userController.validateKey(req, res);
-            next();
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get(async (req: Request, res: Response) => {
             this.controller.index(req, res);
         })
         .post(async (req: Request, res: Response) => {
+            this.controller.index(req, res);
         });
 
         this.app.route(`/queues/newqueue/:queuename`)
         .all(async (req: Request, res: Response, next: NextFunction) => {
             await this.userController.validateKey(req, res);
-            next();
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get(async (req: Request, res: Response) => {
             await this.controller.newQueue(req, res);
@@ -48,7 +51,8 @@ export default class QueuesRoutes extends CommonRoutesConfig {
         this.app.route(`/queues/deletequeue/:queuename`)
         .all(async (req: Request, res: Response, next: NextFunction) => {
             await this.userController.validateKey(req, res);
-            next();
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get(async (req: Request, res: Response) => {
             await this.controller.deleteQueue(req, res);
@@ -60,7 +64,8 @@ export default class QueuesRoutes extends CommonRoutesConfig {
         this.app.route(`/queues/:queuename/getmessage`)
         .all(async (req: Request, res: Response, next: NextFunction) => {
             await this.userController.validateKey(req, res);
-            next();
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get(async (req: Request, res: Response) => {
             await this.controller.getMessage(req, res);
@@ -72,7 +77,8 @@ export default class QueuesRoutes extends CommonRoutesConfig {
         this.app.route(`/queues/:queuename/newmessage`)
         .all(async (req: Request, res: Response, next: NextFunction) => {
             await this.userController.validateKey(req, res);
-            next();
+            if (req.body.validKey) next();
+            else res.status(401).send('Unauthorized.');
         })
         .get(async (req: Request, res: Response) => {
             await this.controller.newMessage(req, res);
