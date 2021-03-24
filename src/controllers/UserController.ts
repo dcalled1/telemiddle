@@ -4,7 +4,6 @@ import UUIDAPIKey, { ApiKeyInfo } from "uuid-apikey";
 import BaseController from "./Common";
 import User, { UserDocument } from "../schemas/User"
 import Key, { KeyDocument } from "../schemas/Key"
-import { generateKeyPairSync } from 'node:crypto';
 
 
 export default class UserController implements BaseController {
@@ -83,6 +82,11 @@ export default class UserController implements BaseController {
 
     async validateKey(req: Request, res: Response) {
         const {username, apiKey} = req.body;
+
+        if(!(await User.exists({username}))) {
+            req.body.usernameExists = false;
+            return;
+        }
 
         if(!UUIDAPIKey.isAPIKey(apiKey)) {
             req.body.validKeySintax = false;
