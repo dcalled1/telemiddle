@@ -29,11 +29,11 @@ export interface QueueMessageDocument extends QueueMessageBaseDocument {
 
 }
 
-QueueMessageSchema.methods.getName = function () {
+QueueMessageSchema.methods.getMessage = function () {
     return this.message;
 }
 
-QueueMessageSchema.methods.getOwner = function () {
+QueueMessageSchema.methods.getQueue = function () {
     return this.queue;
 }
 
