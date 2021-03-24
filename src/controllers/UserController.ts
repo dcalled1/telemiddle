@@ -4,7 +4,6 @@ import UUIDAPIKey, { ApiKeyInfo } from "uuid-apikey";
 import BaseController from "./Common";
 import User, { UserDocument } from "../schemas/User"
 import Key, { KeyDocument } from "../schemas/Key"
-import { generateKeyPairSync } from 'node:crypto';
 
 
 export default class UserController implements BaseController {
@@ -34,6 +33,11 @@ export default class UserController implements BaseController {
 
     async validateUser(req: Request, res: Response) {
         const {username, email} = req.body;
+        if(!username || !email) {
+            req.body.validRequest = false;
+            return;
+        }
+        req.body.validRequest = true;
         const userData = {
             username: username,
             email: email
@@ -77,8 +81,30 @@ export default class UserController implements BaseController {
     }
 
     async validateKey(req: Request, res: Response) {
-        const {username, email, apiKey} = req.body;
+        const {username, apiKey} = req.body;
 
+        if(!username || !apiKey) {
+            req.body.validRequest = false;
+            
+            console.log("invalid request")
+            return;
+        }
+        
+        req.body.validRequest = true;
+
+        if(!(await User.exists({username}))) {
+            req.body.usernameExists = false;
+            return;
+        }
+
+        if(!UUIDAPIKey.isAPIKey(apiKey)) {
+            req.body.validKeySintax = false;
+            req.body.validKey = false;
+            console.log("invalid apikey")
+            return;
+        }
+
+        req.body.validKeySintax = true;
 
         const user = (await User.find({username}))[0];
         const keys = await Key.find({owner: user.id});
@@ -87,7 +113,7 @@ export default class UserController implements BaseController {
             if(UUIDAPIKey.check(apiKey, key.uuid)) ok = true;
         });
         req.body.validKey = ok;
-
+        res.send(ok)
     }
 
 }
