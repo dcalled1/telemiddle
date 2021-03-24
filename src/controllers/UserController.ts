@@ -23,7 +23,7 @@ export default class UserController implements BaseController {
             email: req.body.email
         };
         if (userExists || usernameExists || emailExists) {
-            res.send(`User already exists (username and email must be different)`);
+            res.json({message: "User already exists (username and email must be different)"});
         } else {
             const newUser = new User(userData);
             await newUser.save();
@@ -60,9 +60,12 @@ export default class UserController implements BaseController {
         if (!userExists) {
 
             if (emailExists || usernameExists) {
-                res.status(400).send("Inconsistent user");
+                res.status(400).json({message: "Inconsistent user"});
                 return;
-            } else await this.registerUser(req, res);
+            } else {
+                res.status(400).json({message: "Must have an user first."});
+                return;
+            }
 
         }
         const user = (await User.find({ username, email }))[0];
