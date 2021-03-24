@@ -20,5 +20,11 @@ const KeySchema: Schema = new Schema({
 export interface Key {
     appname: string;
     uuid: string;
-    owner: Types.ObjectId | Record<string, unknown>;
+    owner: Types.ObjectId;
 }
+
+export interface KeyDocument extends Key, Document {}
+
+export interface KeyModel extends Model<KeyDocument> {}
+
+export default model<KeyDocument, KeyModel>('Key', KeySchema);
