@@ -48,8 +48,10 @@ export default class QueueController implements BaseController {
 
     async getMessage(req: Request, res: Response){
         try{
-            const messages = await QueueMessage.find({name: req.params.queuename}).sort({date: 'descending'}).exec();
+            const queue = await Queue.find({name: req.params.queuename}, null, {limit: 1});
+            const messages = await QueueMessage.find({queue: queue[0]?._id}).sort({date: 'descending'}).exec();
             const lastMessage = messages[0];
+            await QueueMessage.findByIdAndRemove(lastMessage?._id);
             res.status(200).send({
                 message: lastMessage?.getMessage()
             });
