@@ -34,6 +34,11 @@ export default class UserController implements BaseController {
 
     async validateUser(req: Request, res: Response) {
         const {username, email} = req.body;
+        if(!username || !email) {
+            req.body.validRequest = false;
+            return;
+        }
+        req.body.validRequest = true;
         const userData = {
             username: username,
             email: email
@@ -77,8 +82,16 @@ export default class UserController implements BaseController {
     }
 
     async validateKey(req: Request, res: Response) {
-        const {username, email, apiKey} = req.body;
+        const {username, apiKey} = req.body;
 
+        if(!UUIDAPIKey.isAPIKey(apiKey)) {
+            req.body.validKeySintax = false;
+            req.body.validKey = false;
+            
+            return;
+        }
+
+        req.body.validKeySintax = true;
 
         const user = (await User.find({username}))[0];
         const keys = await Key.find({owner: user.id});
