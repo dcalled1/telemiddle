@@ -34,6 +34,11 @@ export default class UsersRoutes extends CommonRoutesConfig {
                 this.controller.registerKey(req, res);
             });
 
+        this.app.route(`/validateKey`)
+            .post((req: Request, res: Response) => {
+                this.controller.validateKey(req, res);
+            });
+
         
 
         return this.app;

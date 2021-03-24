@@ -83,6 +83,15 @@ export default class UserController implements BaseController {
     async validateKey(req: Request, res: Response) {
         const {username, apiKey} = req.body;
 
+        if(!username || !apiKey) {
+            req.body.validRequest = false;
+            
+            console.log("invalid request")
+            return;
+        }
+        
+        req.body.validRequest = true;
+
         if(!(await User.exists({username}))) {
             req.body.usernameExists = false;
             return;
@@ -91,7 +100,7 @@ export default class UserController implements BaseController {
         if(!UUIDAPIKey.isAPIKey(apiKey)) {
             req.body.validKeySintax = false;
             req.body.validKey = false;
-            
+            console.log("invalid apikey")
             return;
         }
 
@@ -104,7 +113,7 @@ export default class UserController implements BaseController {
             if(UUIDAPIKey.check(apiKey, key.uuid)) ok = true;
         });
         req.body.validKey = ok;
-
+        res.send(ok)
     }
 
 }
